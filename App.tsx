@@ -11,33 +11,43 @@
 import React, {useState} from 'react';
 import {
   Button,
+  FlatList,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 const App = () => {
   const [users, setUsers] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const fetchUsers = () =>
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(resp => resp.json())
       .then(json => setUsers(json));
 
-  const hideUsers = () => setUsers([]);
+  const fetchPosts = () =>
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(resp => resp.json())
+      .then(json => setPosts(json));
 
-  console.log(users);
+  const hideUsers = () => setUsers([]);
+  const hidePosts = () => setPosts([]);
+
+  const renderItem = ({item, index}: {item: any; index: number}) => {
+    return (
+      <Text key={`item-${index}`}>
+        {item.id} ---- {item.title}
+      </Text>
+    );
+  };
+
+  const hideAll = () => {
+    setPosts([]);
+    setUsers([]);
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -59,6 +69,27 @@ const App = () => {
               </Text>
             );
           })}
+      </View>
+      <View style={styles.headerItem}>
+        {!posts.length ? (
+          <Button onPress={fetchPosts} title={'Get posts'} />
+        ) : (
+          <Button onPress={hidePosts} title={'Hide posts'} />
+        )}
+      </View>
+      <View>
+        {!!posts.length && (
+          <FlatList
+            style={styles.flatList}
+            data={posts}
+            renderItem={renderItem}
+          />
+        )}
+      </View>
+      <View>
+        <TouchableOpacity onLongPress={hideAll} style={styles.button}>
+          <Text>Hide all</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -82,6 +113,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '600',
+  },
+  flatList: {
+    height: 500,
+  },
+  button: {
+    alignItems: 'center',
+    width: '40%',
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderRadius: 10,
+    backgroundColor: '#64A6FA',
   },
 });
 
