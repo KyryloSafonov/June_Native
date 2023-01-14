@@ -23,6 +23,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Home} from './screens/Home';
 import {Posts} from './screens/Posts';
+import { HomeRoutes } from "./routes/HomeRoutes";
+import { MainTab } from "./screens/tabs/MainTab";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +33,7 @@ const App = () => {
     <NavigationContainer>
       <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName={HomeRoutes.Home}
         screenOptions={{
           headerStyle: {
             backgroundColor: '#f4511e',
@@ -43,14 +45,19 @@ const App = () => {
           statusBarColor: '#fff',
         }}>
         <Stack.Screen
-          name="Home"
+          name={HomeRoutes.Home}
           component={Home}
           options={{title: 'June Home Screen'}}
         />
         <Stack.Screen
-          name="Posts"
+          name={HomeRoutes.Posts}
           component={Posts}
           options={{title: 'Posts'}}
+        />
+        <Stack.Screen
+          name={HomeRoutes.MainTab}
+          component={MainTab}
+          options={{title: 'Tabs'}}
         />
       </Stack.Navigator>
     </NavigationContainer>
